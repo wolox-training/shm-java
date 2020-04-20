@@ -36,7 +36,7 @@ public class UserController {
     }
 
     @GetMapping
-    public Iterable findAll() {
+    public Iterable<User> findAll() {
         return userRepository.findAll();
     }
 
@@ -60,7 +60,7 @@ public class UserController {
         return userRepository.findById(id).orElseThrow(UserNotFoundException::new);
     }
 
-    @PostMapping("{user_id}/book/{book_id}")
+    @PostMapping("{user_id}/books/{book_id}")
     public User addBookToCollection(@PathVariable Long user_id, @PathVariable Long book_id) {
         User user = userRepository.findById(user_id).orElseThrow(UserIdMismatchException::new);
         Book book = bookRepository.findById(book_id).orElseThrow(BookIdMismatchException::new);
@@ -68,7 +68,7 @@ public class UserController {
         return userRepository.save(user);
     }
 
-    @DeleteMapping("{user_id}/book/{book_id}")
+    @DeleteMapping("{user_id}/books/{book_id}")
     public User deleteBookToCollection(@PathVariable Long user_id, @PathVariable Long book_id) {
         User user = userRepository.findById(user_id).orElseThrow(UserIdMismatchException::new);
         Book book = bookRepository.findById(book_id).orElseThrow(BookIdMismatchException::new);

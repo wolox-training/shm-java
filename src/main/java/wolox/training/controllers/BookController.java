@@ -40,7 +40,7 @@ public class BookController {
     }
 
     @GetMapping
-    public Iterable findAll() {
+    public Iterable<Book> findAll() {
         return bookRepository.findAll();
     }
 
