@@ -1,16 +1,20 @@
 package wolox.training.models;
 
+import java.util.List;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToMany;
 import javax.persistence.SequenceGenerator;
+import javax.persistence.Table;
+import javax.validation.constraints.NotNull;
 import lombok.AccessLevel;
 import lombok.Data;
 import lombok.Setter;
-import org.springframework.lang.NonNull;
 
 @Entity
+@Table(name = "books")
 @Data
 public class Book {
 
@@ -22,27 +26,30 @@ public class Book {
 
     private String genre;
 
-    @NonNull
+    @NotNull
     private String author;
 
-    @NonNull
+    @NotNull
     private String image;
 
-    @NonNull
+    @NotNull
     private String title;
 
-    @NonNull
+    @NotNull
     private String subtitle;
 
-    @NonNull
+    @NotNull
     private String publisher;
 
-    @NonNull
+    @NotNull
     private String year;
 
-    @NonNull
+    @NotNull
     private int pages;
 
-    @NonNull
+    @NotNull
     private String isbn;
+
+    @ManyToMany(mappedBy = "books")
+    private List<User> user;
 }
