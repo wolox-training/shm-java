@@ -40,7 +40,7 @@ public class BookController {
     }
 
     @GetMapping
-    public Iterable findAll() {
+    public Iterable<Book> findAll() {
         return bookRepository.findAll();
     }
 
@@ -65,8 +65,7 @@ public class BookController {
     }
 
     @GetMapping("/author/{bookAuthor}")
-
-    public List findByTitle(@PathVariable String bookAuthor) {
+    public List findByAuthor(@PathVariable String bookAuthor) {
         return bookRepository.findByAuthor(bookAuthor);
     }
 }
