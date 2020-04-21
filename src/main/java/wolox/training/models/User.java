@@ -15,6 +15,7 @@ import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 import lombok.AccessLevel;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import lombok.NonNull;
 import lombok.Setter;
 import wolox.training.exceptions.BookAlreadyOwnedException;
@@ -22,6 +23,7 @@ import wolox.training.exceptions.BookAlreadyOwnedException;
 @Entity
 @Table(name = "users")
 @Data
+@NoArgsConstructor
 public class User {
 
     @Id

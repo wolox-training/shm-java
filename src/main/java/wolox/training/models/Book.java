@@ -13,12 +13,14 @@ import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 import lombok.AccessLevel;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import lombok.NonNull;
 import lombok.Setter;
 
 @Entity
 @Table(name = "books")
 @Data
+@NoArgsConstructor
 @ApiModel(description = "Books from the library")
 public class Book {
 
