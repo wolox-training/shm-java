@@ -13,6 +13,7 @@ import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 import lombok.AccessLevel;
 import lombok.Data;
+import lombok.NonNull;
 import lombok.Setter;
 
 @Entity
@@ -31,34 +32,42 @@ public class Book {
     private String genre;
 
     @NotNull
+    @NonNull
     @ApiModelProperty(notes = "Name of the author of the book")
     private String author;
 
     @NotNull
+    @NonNull
     @ApiModelProperty(notes = "Book cover image url")
     private String image;
 
     @NotNull
+    @NonNull
     @ApiModelProperty(notes = "Title of the book")
     private String title;
 
     @NotNull
+    @NonNull
     @ApiModelProperty(notes = "Book Subtitle")
     private String subtitle;
 
     @NotNull
+    @NonNull
     @ApiModelProperty(notes = "Name of the company or organization responsible for issuing the publication")
     private String publisher;
 
     @NotNull
+    @NonNull
     @ApiModelProperty(notes = "Year of publication of the book")
     private String year;
 
     @NotNull
+    @NonNull
     @ApiModelProperty(notes = "Number of pages of the book")
-    private int pages;
+    private Integer pages;
 
     @NotNull
+    @NonNull
     @ApiModelProperty(notes = "Unique identification number of the book")
     private String isbn;
 
