@@ -1,5 +1,7 @@
 package wolox.training.models;
 
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 import java.util.List;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -16,6 +18,7 @@ import lombok.Setter;
 @Entity
 @Table(name = "books")
 @Data
+@ApiModel(description = "Books from the library")
 public class Book {
 
     @Id
@@ -24,30 +27,39 @@ public class Book {
     @Setter(AccessLevel.PRIVATE)
     private long id;
 
+    @ApiModelProperty(notes = "The book genre, could be Fictional Novel, Biography, Drama, etc.")
     private String genre;
 
     @NotNull
+    @ApiModelProperty(notes = "Name of the author of the book")
     private String author;
 
     @NotNull
+    @ApiModelProperty(notes = "Book cover image url")
     private String image;
 
     @NotNull
+    @ApiModelProperty(notes = "Title of the book")
     private String title;
 
     @NotNull
+    @ApiModelProperty(notes = "Book Subtitle")
     private String subtitle;
 
     @NotNull
+    @ApiModelProperty(notes = "Name of the company or organization responsible for issuing the publication")
     private String publisher;
 
     @NotNull
+    @ApiModelProperty(notes = "Year of publication of the book")
     private String year;
 
     @NotNull
+    @ApiModelProperty(notes = "Number of pages of the book")
     private int pages;
 
     @NotNull
+    @ApiModelProperty(notes = "Unique identification number of the book")
     private String isbn;
 
     @ManyToMany(mappedBy = "books")
