@@ -1,7 +1,9 @@
 package wolox.training.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -73,6 +75,8 @@ public class Book {
     @ApiModelProperty(notes = "Unique identification number of the book")
     private String isbn;
 
+    @JsonIgnore
     @ManyToMany(mappedBy = "books")
-    private List<User> user;
+    private List<User> user = new ArrayList<User>();
+    ;
 }
