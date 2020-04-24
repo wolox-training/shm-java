@@ -47,6 +47,19 @@ public class User {
     @ManyToMany(cascade = {CascadeType.REFRESH, CascadeType.MERGE})
     private List<Book> books = new ArrayList<Book>();
 
+    public User(long id, String userName, String name, LocalDate birthDate) {
+        this.id = id;
+        setUserName(userName);
+        setName(name);
+        setBirthDate(birthDate);
+    }
+
+    public User(String userName, String name, LocalDate birthDate) {
+        setUserName(userName);
+        setName(name);
+        setBirthDate(birthDate);
+    }
+
     public void addBook(Book book) {
         if (books.contains(book)) {
             throw new BookAlreadyOwnedException();
