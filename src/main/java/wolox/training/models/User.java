@@ -1,5 +1,7 @@
 package wolox.training.models;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonProperty.Access;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -35,6 +37,11 @@ public class User {
     @NotNull
     @NonNull
     private String userName;
+
+    @NotNull
+    @NonNull
+    @JsonProperty(access = Access.WRITE_ONLY)
+    private String password;
 
     @NotNull
     @NonNull
