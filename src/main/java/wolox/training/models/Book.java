@@ -78,5 +78,35 @@ public class Book {
     @JsonIgnore
     @ManyToMany(mappedBy = "books")
     private List<User> user = new ArrayList<User>();
+
+    public Book(long id, String bookTitle, String bookAuthor, String bookGenre, String bookImage,
+        String bookSubtitle, String bookYear, String bookPublisher, String bookIsbn,
+        Integer bookPages) {
+        this.id = id;
+        setTitle(bookTitle);
+        setAuthor(bookAuthor);
+        setGenre(bookGenre);
+        setImage(bookImage);
+        setSubtitle(bookSubtitle);
+        setYear(bookYear);
+        setPublisher(bookPublisher);
+        setIsbn(bookIsbn);
+        setPages(bookPages);
+    }
+
+    public Book(String bookTitle, String bookAuthor, String bookGenre, String bookImage,
+        String bookSubtitle, String bookYear, String bookPublisher, String bookIsbn,
+        Integer bookPages) {
+        setTitle(bookTitle);
+        setAuthor(bookAuthor);
+        setGenre(bookGenre);
+        setImage(bookImage);
+        setSubtitle(bookSubtitle);
+        setYear(bookYear);
+        setPublisher(bookPublisher);
+        setIsbn(bookIsbn);
+        setPages(bookPages);
+    }
+
     ;
 }
