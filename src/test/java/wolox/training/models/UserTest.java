@@ -37,8 +37,7 @@ public class UserTest {
         entityManager.persist(user);
         entityManager.flush();
         Optional<User> userFound = userRepository.findByUserName(user.getUserName());
-        System.out.println(userFound.get());
-        assertThat(userFound.get().getUserName()).isEqualTo(user.getUserName());
+        assertThat(userFound.get()).usingRecursiveComparison().isEqualTo(user);
     }
 
     @Test(expected = NullPointerException.class)

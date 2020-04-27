@@ -38,7 +38,7 @@ public class BookTest {
         entityManager.persist(book);
         entityManager.flush();
         List<Book> bookFound = bookRepository.findByAuthor(book.getAuthor());
-        assertThat(bookFound.get(0).getAuthor()).isEqualTo(book.getAuthor());
+        assertThat(bookFound.get(0)).isEqualToComparingFieldByField(book);
     }
 
     @Test(expected = NullPointerException.class)
