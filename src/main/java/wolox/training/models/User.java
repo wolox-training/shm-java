@@ -1,5 +1,7 @@
 package wolox.training.models;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonProperty.Access;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -19,6 +21,7 @@ import lombok.NoArgsConstructor;
 import lombok.NonNull;
 import lombok.Setter;
 import wolox.training.exceptions.BookAlreadyOwnedException;
+import wolox.training.services.PasswordEncoderService;
 
 @Entity
 @Table(name = "users")
@@ -38,12 +41,17 @@ public class User {
 
     @NotNull
     @NonNull
+    @Setter(AccessLevel.NONE)
+    @JsonProperty(access = Access.WRITE_ONLY)
+    private String password;
+
+    @NotNull
+    @NonNull
     private String name;
 
     @NotNull
     @NonNull
     private LocalDate birthDate;
-
     @ManyToMany(cascade = {CascadeType.REFRESH, CascadeType.MERGE})
     private List<Book> books = new ArrayList<Book>();
 
@@ -58,6 +66,14 @@ public class User {
         setUserName(userName);
         setName(name);
         setBirthDate(birthDate);
+    }
+
+    public void setPassword(String password) {
+        if (password == null || password.isEmpty()) {
+            throw new NullPointerException("Password must not be null");
+        } else {
+            this.password = PasswordEncoderService.encode(password);
+        }
     }
 
     public void addBook(Book book) {
