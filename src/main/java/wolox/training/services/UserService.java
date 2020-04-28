@@ -1,7 +1,6 @@
 package wolox.training.services;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import wolox.training.models.User;
 import wolox.training.repositories.UserRepository;
@@ -12,9 +11,6 @@ public class UserService {
     @Autowired
     private UserRepository userRepository;
 
-    @Autowired
-    private PasswordEncoder passwordEncoder;
-
     public User updateUser(User user, User modifiedUser) {
         user.setUserName(modifiedUser.getUserName());
         user.setName(modifiedUser.getName());
@@ -23,7 +19,7 @@ public class UserService {
     }
 
     public User updateUserPassword(User user, String password) {
-        user.setPassword(passwordEncoder.encode(user.getPassword()));
+        user.setPassword(user.getPassword());
         return userRepository.save(user);
     }
 }
