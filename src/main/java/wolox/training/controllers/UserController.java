@@ -1,5 +1,6 @@
 package wolox.training.controllers;
 
+import java.security.Principal;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -87,5 +88,10 @@ public class UserController {
         @PathVariable Long id) {
         User user = userRepository.findById(id).orElseThrow(UserNotFoundException::new);
         return userService.updateUserPassword(user, password);
+    }
+
+    @GetMapping("/username")
+    public String currentUserName(Principal principal) {
+        return principal.getName();
     }
 }
