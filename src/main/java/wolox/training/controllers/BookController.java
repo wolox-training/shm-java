@@ -150,4 +150,11 @@ public class BookController {
         return ResponseEntity.status(HttpStatus.CREATED)
             .body(openLibraryService.saveBook(openLibraryBook));
     }
+
+    @GetMapping("/find_by_publisher_genre_and_year")
+    public List<Book> findByPublisherAndGenreAndYear(
+        @RequestParam(name = "publisher") String publisher,
+        @RequestParam(name = "genre") String genre, @RequestParam(name = "year") String year) {
+        return bookRepository.findByPublisherAndGenreAndYear(publisher, genre, year);
+    }
 }

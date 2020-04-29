@@ -1,6 +1,8 @@
 package wolox.training.controllers;
 
 import java.security.Principal;
+import java.time.LocalDate;
+import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -11,6 +13,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import wolox.training.exceptions.BookIdMismatchException;
@@ -93,5 +96,15 @@ public class UserController {
     @GetMapping("/username")
     public String currentUserName(Principal principal) {
         return principal.getName();
+    }
+
+    @GetMapping("/find_by_birth_date_and_name")
+    public List<User> findByBirthDateBetweenAndNameContaining(
+        @RequestParam(name = "startDate") String startDate,
+        @RequestParam(name = "endDate") String endDate,
+        @RequestParam(name = "name") String name) {
+        LocalDate firstDate = LocalDate.parse(startDate);
+        LocalDate lastDate = LocalDate.parse(endDate);
+        return userRepository.findByBirthDateBetweenAndNameContaining(firstDate, lastDate, name);
     }
 }
