@@ -151,11 +151,11 @@ public class BookController {
             .body(openLibraryService.saveBook(openLibraryBook));
     }
 
-    @GetMapping()
-    @RequestMapping(params = {"publisher", "genre", "year"})
+    @GetMapping("/search")
     public List<Book> findByPublisherAndGenreAndYear(
-        @RequestParam(name = "publisher") String publisher,
-        @RequestParam(name = "genre") String genre, @RequestParam(name = "year") String year) {
+        @RequestParam(name = "publisher", required = false) String publisher,
+        @RequestParam(name = "genre", required = false) String genre,
+        @RequestParam(name = "year", required = false) String year) {
         return bookRepository.findByPublisherAndGenreAndYear(publisher, genre, year);
     }
 }

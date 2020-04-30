@@ -98,12 +98,11 @@ public class UserController {
         return principal.getName();
     }
 
-    @GetMapping()
-    @RequestMapping(params = {"startDate", "endDate", "name"})
+    @GetMapping("/search")
     public List<User> findByBirthDateBetweenAndNameContaining(
-        @RequestParam(name = "startDate") String startDate,
-        @RequestParam(name = "endDate") String endDate,
-        @RequestParam(name = "name") String name) {
+        @RequestParam(name = "startDate", defaultValue = "0000-01-01") String startDate,
+        @RequestParam(name = "endDate", defaultValue = "9999-12-31") String endDate,
+        @RequestParam(name = "name", defaultValue = "") String name) {
         LocalDate firstDate = LocalDate.parse(startDate);
         LocalDate lastDate = LocalDate.parse(endDate);
         return userRepository.findByBirthDateBetweenAndNameContaining(firstDate, lastDate, name);
