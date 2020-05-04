@@ -69,8 +69,18 @@ public class BookController {
         @ApiResponse(code = 404, message = "The resource you are trying to access was not found"),
         @ApiResponse(code = 500, message = "Internal server error")
     })
-    public Iterable<Book> findAll() {
-        return bookRepository.findAll();
+    public Iterable<Book> findAll(
+        @RequestParam(name = "genre", required = false) String genre,
+        @RequestParam(name = "author", required = false) String author,
+        @RequestParam(name = "image", required = false) String image,
+        @RequestParam(name = "title", required = false) String title,
+        @RequestParam(name = "subtitle", required = false) String subtitle,
+        @RequestParam(name = "publisher", required = false) String publisher,
+        @RequestParam(name = "year", required = false) String year,
+        @RequestParam(name = "pages", required = false) Integer pages,
+        @RequestParam(name = "isbn", required = false) String isbn) {
+        return bookRepository
+            .findAllByFilter(genre, author, image, title, subtitle, publisher, year, pages, isbn);
     }
 
     @PutMapping("/{id}")
