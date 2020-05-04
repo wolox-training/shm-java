@@ -2,6 +2,8 @@ package wolox.training.repositories;
 
 import java.util.List;
 import java.util.Optional;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.query.Param;
@@ -30,7 +32,7 @@ public interface BookRepository extends CrudRepository<Book, Long> {
         + "(:year IS NULL OR b.year = :year) AND"
         + "(:pages IS NULL OR b.pages = :pages) AND"
         + "(:isbn IS NULL OR b.isbn = :isbn)")
-    List<Book> findAllByFilter(
+    Page<Book> findAllByFilter(
         @Param("genre") String genre,
         @Param("author") String author,
         @Param("image") String image,
@@ -39,6 +41,6 @@ public interface BookRepository extends CrudRepository<Book, Long> {
         @Param("publisher") String publisher,
         @Param("year") String year,
         @Param("pages") Integer pages,
-        @Param("isbn") String isbn
-    );
+        @Param("isbn") String isbn,
+        Pageable pageable);
 }
