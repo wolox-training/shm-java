@@ -19,4 +19,15 @@ public interface UserRepository extends CrudRepository<User, Long> {
         @Param("startDate") LocalDate startDate,
         @Param("endDate") LocalDate endDate,
         @Param("name") String name);
+
+    @Query(
+        "SELECT u FROM User u WHERE (:id IS NULL OR u.id = :id) AND "
+            + "(:userName IS NULL OR u.userName = :userName) AND "
+            + "(:name IS NULL OR u.name = :name) AND"
+            + "(CAST(:birthDate AS date) IS NULL OR u.birthDate = :birthDate)")
+    List<User> findAllByFilter(
+        @Param("id") Long id,
+        @Param("userName") String userName,
+        @Param("name") String name,
+        @Param("birthDate") LocalDate birthDate);
 }

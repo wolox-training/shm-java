@@ -4,6 +4,7 @@ import java.security.Principal;
 import java.time.LocalDate;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -46,8 +47,13 @@ public class UserController {
     }
 
     @GetMapping
-    public Iterable<User> findAll() {
-        return userRepository.findAll();
+    public Iterable<User> findAll(
+        @RequestParam(name = "id", required = false) Long id,
+        @RequestParam(name = "userName", required = false) String userName,
+        @RequestParam(name = "name", required = false) String name,
+        @RequestParam(name = "birthDate", required = false)
+        @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate birthDate) {
+        return userRepository.findAllByFilter(id, userName, name, birthDate);
     }
 
     @PutMapping("/{id}")
