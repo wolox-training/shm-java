@@ -1,0 +1,24 @@
+{
+  "ISBN:0451521234": {
+    "number_of_pages": 268,
+    "subtitle": "A Novel",
+    "title": "1984",
+    "publishers": [
+      {
+        "name": "New American Library"
+      }
+    ],
+    "authors": [
+      {
+        "url": "https://openlibrary.org/authors/OL118077A/George_Orwell",
+        "name": "George Orwell"
+      }
+    ],
+    "cover": {
+      "small": "https://covers.openlibrary.org/b/id/8579186-S.jpg",
+      "large": "https://covers.openlibrary.org/b/id/8579186-L.jpg",
+      "medium": "https://covers.openlibrary.org/b/id/8579186-M.jpg"
+    },
+    "publish_date": "1984"
+  }
+}

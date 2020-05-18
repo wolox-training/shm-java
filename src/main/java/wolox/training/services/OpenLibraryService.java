@@ -55,7 +55,6 @@ public class OpenLibraryService {
             openLibraryBook.getPublishDate(),
             openLibraryBook.getPublisher(), openLibraryBook.getIsbn(),
             openLibraryBook.getNumberOfPages());
-        bookRepository.save(book);
-        return book;
+        return bookRepository.save(book);
     }
 }

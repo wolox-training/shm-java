@@ -1,5 +1,7 @@
 package wolox.training.controllers;
 
+import static com.github.tomakehurst.wiremock.client.WireMock.aResponse;
+import static com.github.tomakehurst.wiremock.client.WireMock.urlEqualTo;
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
 import static org.mockito.BDDMockito.given;
@@ -11,6 +13,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.github.tomakehurst.wiremock.WireMockServer;
+import com.github.tomakehurst.wiremock.client.WireMock;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -22,14 +26,23 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import wolox.training.models.Book;
+import wolox.training.providers.CustomAuthenticationProvider;
 import wolox.training.repositories.BookRepository;
+import wolox.training.services.OpenLibraryService;
 
 @RunWith(SpringRunner.class)
 @WebMvcTest(BookController.class)
 public class BookControllerTest {
+
+    @MockBean
+    private CustomAuthenticationProvider customAuthenticationProvider;
+
+    @MockBean
+    private OpenLibraryService openLibraryService;
 
     @Autowired
     private MockMvc mvc;
@@ -43,11 +56,12 @@ public class BookControllerTest {
 
     @Before
     public void setUp() {
-        book = new Book(1, "Social science fiction", "George Orwell",
-            "image.jpg", "1984", "Nineteen Eighty Four",
-            "Debolsillo", "1948", "9788499890944", 309);
+        book = new Book(1, "1984", "George Orwell",
+            "Social science fiction", "image.jpg", "Nineteen Eighty Four",
+            "1948", "New American Library", "0451521234", 309);
     }
 
+    @WithMockUser
     @Test
     public void givenBooks_whenGetBooks_thenReturnJsonArray() throws Exception {
         List<Book> allBooks = Arrays.asList(book);
@@ -69,7 +83,7 @@ public class BookControllerTest {
     }
 
     @Test
-    public void givenAValidBook_whenCreatesABook_thenReturnJson() throws Exception {
+    public void givenAValidBook_whenCreatesABook_thenReturnCreated() throws Exception {
         mvc.perform(post("/api/books/")
             .content(objectMapper.writeValueAsString(book))
             .contentType(MediaType.APPLICATION_JSON))
@@ -128,5 +142,57 @@ public class BookControllerTest {
         mvc.perform(delete("/api/books/3")
             .contentType(MediaType.APPLICATION_JSON))
             .andExpect(status().isNotFound());
+    }
+
+    @WithMockUser
+    @Test
+    public void givenAIsbn_whenSearchingForExistingBook_thenReturnOk() throws Exception {
+        given(bookRepository.findByIsbn("0451521234")).willReturn(Optional.of(book));
+
+        mvc.perform(get("/api/books/isbn/" + book.getIsbn())
+            .contentType(MediaType.APPLICATION_JSON))
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$.publisher", is(book.getPublisher())));
+    }
+
+    @WithMockUser
+    @Test
+    public void givenAIsbn_whenSearchForNonExistingBook_thenReturnCreated() throws Exception {
+        given(bookRepository.save(book)).willReturn(book);
+        WireMockServer wireMockServer = new WireMockServer();
+        wireMockServer.givenThat(
+            WireMock.get(urlEqualTo("/api/books?bibkeys=ISBN:0451521234&format=json&jscmd=data"))
+                .willReturn(aResponse()
+                    .withStatus(200)
+                    .withHeader("Content-Type", "application/json")
+                    .withBodyFile("response_ok_book.json")));
+
+        wireMockServer.start();
+
+        mvc.perform(get("/api/books/isbn/" + book.getIsbn())
+            .contentType(MediaType.APPLICATION_JSON))
+            .andExpect(status().isCreated());
+        wireMockServer.stop();
+    }
+
+    @WithMockUser
+    @Test
+    public void givenAIsbn_whenSearchForInvalidBook_thenReturnCreated()
+        throws Exception {
+        WireMockServer wireMockServer = new WireMockServer();
+        wireMockServer.givenThat(
+            WireMock.get(urlEqualTo("/api/books?bibkeys=ISBN:0451521234&format=json&jscmd=data"))
+                .willReturn(aResponse()
+                    .withStatus(200)
+                    .withHeader("Content-Type", "application/json")
+                    .withBodyFile("response_book_not_found.json")));
+
+        wireMockServer.start();
+
+        mvc.perform(get("/api/books/isbn/" + book.getIsbn())
+            .contentType(MediaType.APPLICATION_JSON))
+            .andExpect(status().isNotFound());
+
+        wireMockServer.stop();
     }
 }
