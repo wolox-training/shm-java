@@ -27,22 +27,17 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
+import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import wolox.training.models.Book;
-import wolox.training.providers.CustomAuthenticationProvider;
 import wolox.training.repositories.BookRepository;
 import wolox.training.services.OpenLibraryService;
 
 @RunWith(SpringRunner.class)
 @WebMvcTest(BookController.class)
+@ContextConfiguration(classes = {BookController.class, OpenLibraryService.class})
 public class BookControllerTest {
-
-    @MockBean
-    private CustomAuthenticationProvider customAuthenticationProvider;
-
-    @MockBean
-    private OpenLibraryService openLibraryService;
 
     @Autowired
     private MockMvc mvc;
@@ -160,14 +155,13 @@ public class BookControllerTest {
     public void givenAIsbn_whenSearchForNonExistingBook_thenReturnCreated() throws Exception {
         given(bookRepository.save(book)).willReturn(book);
         WireMockServer wireMockServer = new WireMockServer();
+        wireMockServer.start();
         wireMockServer.givenThat(
             WireMock.get(urlEqualTo("/api/books?bibkeys=ISBN:0451521234&format=json&jscmd=data"))
                 .willReturn(aResponse()
                     .withStatus(200)
                     .withHeader("Content-Type", "application/json")
                     .withBodyFile("response_ok_book.json")));
-
-        wireMockServer.start();
 
         mvc.perform(get("/api/books/isbn/" + book.getIsbn())
             .contentType(MediaType.APPLICATION_JSON))
@@ -180,16 +174,16 @@ public class BookControllerTest {
     public void givenAIsbn_whenSearchForInvalidBook_thenReturnCreated()
         throws Exception {
         WireMockServer wireMockServer = new WireMockServer();
+        wireMockServer.start();
         wireMockServer.givenThat(
-            WireMock.get(urlEqualTo("/api/books?bibkeys=ISBN:0451521234&format=json&jscmd=data"))
+            WireMock
+                .get(urlEqualTo("/api/books?bibkeys=ISBN:045152123456789&format=json&jscmd=data"))
                 .willReturn(aResponse()
                     .withStatus(200)
                     .withHeader("Content-Type", "application/json")
                     .withBodyFile("response_book_not_found.json")));
 
-        wireMockServer.start();
-
-        mvc.perform(get("/api/books/isbn/" + book.getIsbn())
+        mvc.perform(get("/api/books/isbn/045152123456789")
             .contentType(MediaType.APPLICATION_JSON))
             .andExpect(status().isNotFound());
 
